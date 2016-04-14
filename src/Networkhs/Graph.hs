@@ -8,6 +8,7 @@ data Node a = Node
 		key      :: String
 	, content  :: a
 	}
+	deriving (Show)
 
 data Link = Link
 	{
@@ -15,10 +16,19 @@ data Link = Link
 	, to       :: String
 	, weight   :: Double
 	}
+	deriving (Show)
 
 data Graph a = Graph
 	{
 		nodes    :: [Node a]
 	, links    :: [Link]
 	}
+	deriving (Show)
+
+
+----------------------------
+
+newGraph :: [Node a] -> Graph a
+newGraph ns = Graph { nodes = ns, links = []}
+
 
