@@ -30,5 +30,5 @@ linkKey a b = unlines [a,b]
 
 addLink :: (String,String,Double) -> Graph a -> Graph a
 addLink (n0,n1,w) g = let lmap = links g 
-	in g { links = M.insert (linkKey n0 n1) w lmap }
+	in g { links = M.insert (linkKey n0 n1) w lmap } -- This will always update existing link
 
