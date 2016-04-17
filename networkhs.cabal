@@ -50,15 +50,6 @@ cabal-version:       >=1.22
 
 
 
-Test-Suite test-networkhs
-  type:             exitcode-stdio-1.0
-  hs-source-dirs:   test
-  main-is:          Spec.hs
-  build-depends:    base, hspec, QuickCheck, networkhs, containers
-  ghc-options:      -Wall
-  default-language: Haskell2010
-
-
 executable networkhs
   -- .hs or .lhs file containing the Main module.
   main-is:             Main.hs
@@ -77,4 +68,13 @@ executable networkhs
   
   -- Base language which the package is written in.
   default-language:    Haskell2010
+
+Test-Suite test-networkhs-basic
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   test
+  main-is:          Spec.hs
+  build-depends:    base, hspec, QuickCheck, networkhs, containers
+  ghc-options:      -Wall
+  default-language: Haskell2010
+
   
