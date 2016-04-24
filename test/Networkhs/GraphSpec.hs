@@ -57,3 +57,12 @@ spec = do
 				l4 = G.link "beijing" "bangkok" g';
 			}
 				in [l1,l2,l3,l4] `shouldBe` [Just 1.1, Nothing, Just 2.2, Just 2.2]
+
+		it "should get links back and forth" $ do
+			let {
+				g  = G.addLink ("beijing","osaka",1.1) graph1;
+				g' = G.addBiLink ("bangkok","beijing",2.2) g;
+				l1 = G.linkBackAndForth "beijing" "osaka" g';
+				l2 = G.linkBackAndForth "beijing" "bangkok" g';
+			}
+				in [l1,l2] `shouldBe` [(Just 1.1,Nothing),(Just 2.2, Just 2.2)]

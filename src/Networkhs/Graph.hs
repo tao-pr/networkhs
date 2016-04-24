@@ -69,5 +69,6 @@ link n0 n1 g = case M.lookup n0 (linksFrom g) of
 		let ns = [ w | (n,w) <- array, n==n1]
 		in if Prelude.null ns then Nothing else Just $ head ns
 
-
+linkBackAndForth :: String -> String -> Graph a -> (Maybe Double, Maybe Double)
+linkBackAndForth n0 n1 g = (link n0 n1 g, link n1 n0 g)
 
