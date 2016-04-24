@@ -22,6 +22,8 @@ data Graph a = Graph
 	}
 	deriving (Show)
 
+data Route = Route [(String,String)]
+
 
 ----------------------------
 
@@ -71,4 +73,19 @@ link n0 n1 g = case M.lookup n0 (linksFrom g) of
 
 linkBackAndForth :: String -> String -> Graph a -> (Maybe Double, Maybe Double)
 linkBackAndForth n0 n1 g = (link n0 n1 g, link n1 n0 g)
+
+newRoute :: [String] -> Route
+newRoute ns   = 
+	if length ns < 2 then Route []
+	else
+		let { 
+			n0 = head ns; 
+			n1 = (head . tail) ns;
+			r0 = [(n0,n1)];
+			rn = newRoute $ tail ns;
+		}
+		in case rn of 
+			Route [] -> Route r0
+			Route rn' -> Route $ r0 ++ rn'
+
 

@@ -66,3 +66,10 @@ spec = do
 				l2 = G.linkBackAndForth "beijing" "bangkok" g';
 			}
 				in [l1,l2] `shouldBe` [(Just 1.1,Nothing),(Just 2.2, Just 2.2)]
+
+	describe "Fundamental route structure tests" $ do
+		it "should create a new route" $ do
+			case G.newRoute ["a","b","c","d"] of
+				G.Route [] -> error "Route should not be empty"
+				G.Route r -> r `shouldBe` [("a","b"),("b","c"),("c","d")]
+
