@@ -2,6 +2,7 @@ module Networkhs.GraphSpec (main,spec) where
 
 import Test.Hspec
 import Test.QuickCheck
+import Data.Maybe
 import qualified Networkhs.Graph as G
 
 main :: IO ()
@@ -11,14 +12,14 @@ spec :: Spec
 spec = do
 	describe "Fundamental Graph structure tests" $ do
 		it "should create an empty graph" $ do
-			length G.nodes g `shouldBe` 0
-				where g = G.newGraph []
+			let {g = G.newGraph []; len = length $ G.nodes g }
+				in len `shouldBe` 0
 
 		it "should create a graph with nodes" $ do
-			G.nodes g `shouldBe` [a,b,c]
-				where {
-					a = G.Node "brasil" 100;
-					b = G.Node "australia" 200;
-					c = G.Node "japan" 300;
-					g = G.newGraph [a,b,c]
-				}
+			let {
+				a = G.Node "brasil" Nothing;
+				b = G.Node "australia" Nothing;
+				c = G.Node "japan" Nothing;
+				g = G.newGraph [a,b,c]
+			}
+				in map (G.key) (G.nodes g) `shouldBe` ["brasil","australia","japan"]

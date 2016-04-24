@@ -30,6 +30,7 @@ newGraph ns = Graph {
 	nodes = ns, linksFrom = M.fromList [], linksTo = M.fromList []
 	}
 
+
 addLink :: (String,String,Double) -> Graph a -> Graph a
 addLink (n0,n1,w) g = let g' = __addLinkTo (n0,n1,w) g
 	in __addLinkFrom (n0,n1,w) g'
