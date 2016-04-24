@@ -37,3 +37,13 @@ spec = do
 			}
 				in map (G.key) (G.nodes g) `shouldBe` ["beijing","osaka","bangkok","moscow","singapore"]
 
+		it "should add a link" $ do
+			let {
+				g  = G.addLink ("beijing","osaka",5.0) graph1;
+				g' = G.addLink ("osaka","bangkok",12.5) g;
+				l1 = G.link "beijing" "osaka" g';
+				l2 = G.link "osaka" "bangkok" g';
+				l3 = G.link "osaka" "moscow" g';
+			}
+				in [l1,l2,l3] `shouldBe` [Just 5.0,Just 12.5,Nothing]
+
