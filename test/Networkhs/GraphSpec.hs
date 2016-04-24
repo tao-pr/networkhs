@@ -45,5 +45,15 @@ spec = do
 				l2 = G.link "osaka" "bangkok" g';
 				l3 = G.link "osaka" "moscow" g';
 			}
-				in [l1,l2,l3] `shouldBe` [Just 5.0,Just 12.5,Nothing]
+				in [l1,l2,l3] `shouldBe` [Just 5.0, Just 12.5, Nothing]
 
+		it "bidirectional link vs oneway link" $ do
+			let {
+				g  = G.addLink ("beijing","osaka",1.1) graph1;
+				g' = G.addBiLink ("bangkok","beijing",2.2) g;
+				l1 = G.link "beijing" "osaka" g';
+				l2 = G.link "osaka" "beijing" g';
+				l3 = G.link "bangkok" "beijing" g';
+				l4 = G.link "beijing" "bangkok" g';
+			}
+				in [l1,l2,l3,l4] `shouldBe` [Just 1.1, Nothing, Just 2.2, Just 2.2]
