@@ -8,6 +8,13 @@ import qualified Networkhs.Graph as G
 main :: IO ()
 main = hspec spec
 
+graph1 :: G.Graph [Char]
+graph1 = let{
+		xs = ["beijing","osaka","bangkok","moscow"];
+		ns = map (\n -> G.Node n "city") xs;
+	}
+	in G.newGraph ns
+
 spec :: Spec
 spec = do
 	describe "Fundamental Graph structure tests" $ do
@@ -23,3 +30,10 @@ spec = do
 				g = G.newGraph [a,b,c]
 			}
 				in map (G.key) (G.nodes g) `shouldBe` ["brasil","australia","japan"]
+
+		it "should add new node to a graph" $ do
+			let {
+				g = G.addNode ("singapore","") graph1;
+			}
+				in map (G.key) (G.nodes g) `shouldBe` ["beijing","osaka","bangkok","moscow","singapore"]
+

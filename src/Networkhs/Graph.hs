@@ -30,6 +30,8 @@ newGraph ns = Graph {
 	nodes = ns, linksFrom = M.fromList [], linksTo = M.fromList []
 	}
 
+addNode :: (String,a) -> Graph a -> Graph a
+addNode (s,a) g = g { nodes = (nodes g) ++ [Node s a]}
 
 addLink :: (String,String,Double) -> Graph a -> Graph a
 addLink (n0,n1,w) g = let g' = __addLinkTo (n0,n1,w) g
@@ -59,3 +61,13 @@ __addLinkFrom (n0,n1,w) g = let lnks = linksFrom g in
 addBiLink :: (String,String,Double) -> Graph a -> Graph a
 addBiLink (n0,n1,w) g = let g' = addLink (n0,n1,w) g
 	in addLink (n1,n0,w) g'
+
+link :: String -> String -> Graph a -> Maybe Double
+link n0 n1 g = case M.lookup n0 (linksFrom g) of
+	Nothing -> Nothing
+	Just array -> 
+		let ns = [ w | (n,w) <- array, n==n1]
+		in if Prelude.null ns then Nothing else Just $ head ns
+
+
+
