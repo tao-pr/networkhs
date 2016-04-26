@@ -3,7 +3,9 @@
 Graph analysis tool in purely functional taste.
 
 ---
+
 > *Development Status:* In progress
+
 ---
 
 ## Building
