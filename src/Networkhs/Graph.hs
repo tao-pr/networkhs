@@ -76,6 +76,7 @@ linkBackAndForth n0 n1 g = (link n0 n1 g, link n1 n0 g)
 
 newRoute :: [String] -> Route
 newRoute ns   = 
+	-- Route must consist of at least two blocks of node
 	if length ns < 2 then Route []
 	else
 		let { 
@@ -87,5 +88,18 @@ newRoute ns   =
 		in case rn of 
 			Route [] -> Route r0
 			Route rn' -> Route $ r0 ++ rn'
+
+routeDistance :: Route -> Graph a -> Maybe Double
+routeDistance r g = case r of
+	Route [] -> Nothing
+	Route rs -> let {
+		(n0,n1) = head rs;
+		dist0   = link n0 n1 g; -- Distance of the first hop
+		dist'   = routeDistance $ Route $ tail rs; -- Total distance of the rest
+	}
+	in if null dist0 || null dist' then Nothing else 
+
+__distance :: (String,String) -> Graph a -> Maybe Double
+__distance (n0,n1) g = link n0 n1 g
 
 
