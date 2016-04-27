@@ -21,7 +21,7 @@ graph2 :: G.Graph [Char]
 graph2 = let links = [
 			("beijing","osaka",3),
 			("beijing","bangkok",8),
-			("beijing","moscow",10),
+			--("beijing","moscow",10),
 			("moscow","bangkok",15),
 			("osaka","moscow",10),
 			("osaka","bangkok",12)
@@ -94,3 +94,11 @@ spec = do
 		it "should compute total distance" $ do
 			let r = G.Route [("beijing","osaka"),("osaka","bangkok"),("bangkok","moscow")]
 				in G.routeDistance r graph2 `shouldBe` Just 30
+
+		it "should fail to compute distance of unknown node" $ do
+			let r = G.Route [("bangkok","osaka"),("osaka","shanghai")]
+				in G.routeDistance r graph2 `shouldSatisfy` null
+
+		it "should fail to compute distance of unconnected route" $ do
+			let r = G.newRoute ["beijing","osaka","bangkok","moscow","beijing"]
+				in G.routeDistance r graph2 `shouldSatisfy` null
