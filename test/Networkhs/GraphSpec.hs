@@ -8,6 +8,7 @@ import qualified Networkhs.Graph as G
 main :: IO ()
 main = hspec spec
 
+-- Simple graph without any links
 graph1 :: G.Graph [Char]
 graph1 = let{
 		xs = ["beijing","osaka","bangkok","moscow"];
@@ -15,16 +16,17 @@ graph1 = let{
 	}
 	in G.newGraph ns
 
---graph2 :: G.Graph [Char]
---graph2 = let{
---		ls = [
---			("beijing","osaka",3),
---			("beijing","bangkok",8),
---			("beijing","moscow",10),
---			("moscow","bangkok",15)
---		];
---		g' = foldr (G.addBiLink) graph1 ls;
---	}
+-- Simple graph with some bidirectional links
+graph2 :: G.Graph [Char]
+graph2 = let links = [
+			("beijing","osaka",3),
+			("beijing","bangkok",8),
+			("beijing","moscow",10),
+			("moscow","bangkok",15),
+			("osaka","moscow",10),
+			("osaka","bangkok",12)
+		]
+		in foldl (G.addBiLink) graph1 links;
 
 spec :: Spec
 spec = do
@@ -84,3 +86,11 @@ spec = do
 				G.Route [] -> error "Route should not be empty"
 				G.Route r -> r `shouldBe` [("a","b"),("b","c"),("c","d")]
 
+		it "should compute distance of a single hop" $ do
+			let r = G.Route [("beijing","osaka")]
+				in G.routeDistance r graph2 `shouldBe` Just 3
+
+
+		it "should compute total distance" $ do
+			let r = G.Route [("beijing","osaka"),("osaka","bangkok"),("bangkok","moscow")]
+				in G.routeDistance r graph2 `shouldBe` Just 30

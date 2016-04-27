@@ -91,18 +91,19 @@ newRoute ns   =
 
 routeDistance :: Route -> Graph a -> Maybe Double
 routeDistance r g = case r of
-	Route [] -> Nothing
-	Route rs -> let {
-		(n0,n1) = head rs; -- First hop
-		dist0   = link n0 n1 g; -- Distance of the first hop
-		r'      = Route $ tail rs; -- The rest route succeeding the first hop
-		dist'   = routeDistance r' g; -- Total distance of the rest
-	}
-		in case dist' of 
-			Nothing -> Nothing -- Invalid succeeding route
-			Just dist'' -> 
-				case dist0 of
-					Nothing -> Nothing -- Invalid first hop
-					Just dist0' -> Just (dist0' + dist'')
+	Route []     -> Nothing
+	Route (q:[]) -> case q of
+		(n0,n1)    -> link n0 n1 g 
+		otherwise  -> Nothing -- Safeguard
+	Route (q:qs) -> let { 
+		dist0 = routeDistance (Route [q]) g;
+		dists = routeDistance (Route qs) g;
+		}
+		in case dist0 of
+			Nothing     -> Nothing
+			Just dist0' -> case dists of
+				Nothing     -> Nothing
+				Just dists' -> Just (dist0' + dists')
+
 
 
