@@ -15,6 +15,17 @@ graph1 = let{
 	}
 	in G.newGraph ns
 
+--graph2 :: G.Graph [Char]
+--graph2 = let{
+--		ls = [
+--			("beijing","osaka",3),
+--			("beijing","bangkok",8),
+--			("beijing","moscow",10),
+--			("moscow","bangkok",15)
+--		];
+--		g' = foldr (G.addBiLink) graph1 ls;
+--	}
+
 spec :: Spec
 spec = do
 	describe "Fundamental Graph structure tests" $ do
@@ -39,8 +50,8 @@ spec = do
 
 		it "should add a link" $ do
 			let {
-				g  = G.addLink ("beijing","osaka",5.0) graph1;
-				g' = G.addLink ("osaka","bangkok",12.5) g;
+				g  = G.addLink graph1 ("beijing","osaka",5.0);
+				g' = G.addLink g ("osaka","bangkok",12.5);
 				l1 = G.link "beijing" "osaka" g';
 				l2 = G.link "osaka" "bangkok" g';
 				l3 = G.link "osaka" "moscow" g';
@@ -49,8 +60,8 @@ spec = do
 
 		it "bidirectional link vs oneway link" $ do
 			let {
-				g  = G.addLink ("beijing","osaka",1.1) graph1;
-				g' = G.addBiLink ("bangkok","beijing",2.2) g;
+				g  = G.addLink graph1 ("beijing","osaka",1.1);
+				g' = G.addBiLink g ("bangkok","beijing",2.2);
 				l1 = G.link "beijing" "osaka" g';
 				l2 = G.link "osaka" "beijing" g';
 				l3 = G.link "bangkok" "beijing" g';
@@ -60,8 +71,8 @@ spec = do
 
 		it "should get links back and forth" $ do
 			let {
-				g  = G.addLink ("beijing","osaka",1.1) graph1;
-				g' = G.addBiLink ("bangkok","beijing",2.2) g;
+				g  = G.addLink graph1 ("beijing","osaka",1.1);
+				g' = G.addBiLink g ("bangkok","beijing",2.2);
 				l1 = G.linkBackAndForth "beijing" "osaka" g';
 				l2 = G.linkBackAndForth "beijing" "bangkok" g';
 			}

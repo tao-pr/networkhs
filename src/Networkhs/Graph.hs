@@ -35,12 +35,12 @@ newGraph ns = Graph {
 addNode :: (String,a) -> Graph a -> Graph a
 addNode (s,a) g = g { nodes = (nodes g) ++ [Node s a]}
 
-addLink :: (String,String,Double) -> Graph a -> Graph a
-addLink (n0,n1,w) g = let g' = __addLinkTo (n0,n1,w) g
-	in __addLinkFrom (n0,n1,w) g'
+addLink :: Graph a -> (String,String,Double) -> Graph a
+addLink g (n0,n1,w) = let g' = __addLinkTo g (n0,n1,w)
+	in __addLinkFrom g' (n0,n1,w)
 
-__addLinkTo :: (String,String,Double) -> Graph a -> Graph a
-__addLinkTo (n0,n1,w) g = let lnks = linksTo g in
+__addLinkTo ::  Graph a -> (String,String,Double) -> Graph a
+__addLinkTo g (n0,n1,w) = let lnks = linksTo g in
 	case M.lookup n1 lnks of
 		Nothing -> g { linksTo = M.insert n1 [(n0,w)] lnks }
 		Just array -> g { linksTo = M.insert n1 array'' lnks }
@@ -49,8 +49,8 @@ __addLinkTo (n0,n1,w) g = let lnks = linksTo g in
 				array'' = array' ++ [(n0,w)]
 			}
 
-__addLinkFrom :: (String,String,Double) -> Graph a -> Graph a
-__addLinkFrom (n0,n1,w) g = let lnks = linksFrom g in
+__addLinkFrom :: Graph a -> (String,String,Double) -> Graph a
+__addLinkFrom g (n0,n1,w) = let lnks = linksFrom g in
 	case M.lookup n0 lnks of
 		Nothing -> g { linksFrom = M.insert n0 [(n1,w)] lnks }
 		Just array -> g { linksFrom = M.insert n0 array'' lnks }
@@ -60,9 +60,9 @@ __addLinkFrom (n0,n1,w) g = let lnks = linksFrom g in
 			}
 	
 
-addBiLink :: (String,String,Double) -> Graph a -> Graph a
-addBiLink (n0,n1,w) g = let g' = addLink (n0,n1,w) g
-	in addLink (n1,n0,w) g'
+addBiLink :: Graph a -> (String,String,Double) -> Graph a
+addBiLink g (n0,n1,w) = let g' = addLink g (n0,n1,w)
+	in addLink g' (n1,n0,w)
 
 link :: String -> String -> Graph a -> Maybe Double
 link n0 n1 g = case M.lookup n0 (linksFrom g) of
@@ -93,13 +93,16 @@ routeDistance :: Route -> Graph a -> Maybe Double
 routeDistance r g = case r of
 	Route [] -> Nothing
 	Route rs -> let {
-		(n0,n1) = head rs;
+		(n0,n1) = head rs; -- First hop
 		dist0   = link n0 n1 g; -- Distance of the first hop
-		dist'   = routeDistance $ Route $ tail rs; -- Total distance of the rest
+		r'      = Route $ tail rs; -- The rest route succeeding the first hop
+		dist'   = routeDistance r' g; -- Total distance of the rest
 	}
-	in if null dist0 || null dist' then Nothing else 
-
-__distance :: (String,String) -> Graph a -> Maybe Double
-__distance (n0,n1) g = link n0 n1 g
+		in case dist' of 
+			Nothing -> Nothing -- Invalid succeeding route
+			Just dist'' -> 
+				case dist0 of
+					Nothing -> Nothing -- Invalid first hop
+					Just dist0' -> Just (dist0' + dist'')
 
 
