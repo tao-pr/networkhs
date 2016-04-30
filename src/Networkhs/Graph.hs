@@ -4,7 +4,7 @@ import Prelude
 import Data.Maybe
 import Data.String
 import Data.List(sortBy)
-import Data.Map as M hiding (map,foldl)
+import Data.Map as M hiding (map,foldl,filter)
 
 data Node a = Node
   { key      :: String
@@ -138,9 +138,23 @@ edges g = let { lnks  = linksFrom g
   }
   in sortBy __orderLink lls
 
+-- | Verify if a link is bidirectional (has its mirror)
+__isBiLink :: Graph a -> (String,String,Double) -> Bool
+__isBiLink g (n0,n1,w) = let (w1,w2) = linkBackAndForth n0 n1 g
+  in w1 == w2
+
+-- | Verify if a graph is undirected (all links are bi-directional)
+isUndirected :: Graph a -> Bool
+isUndirected g = let lnks = edges g
+  in all (__isBiLink g) lnks
+
 -- | Check whether a graph is cyclic
 isCyclic :: Graph a -> Bool
 isCyclic g = error "TAOTODO: Implement this"
+
+-- | Check whether a link is a self loop
+isSelfLoop :: (String,String,Double) -> Bool
+isSelfLoop (n0,n1,w) = n0 == n1
 
 -- | Accumulate a spanning tree with an edge (part of spanTree function)
 __makeSpanTree :: Graph g -> (String,String,Double) -> Graph g
@@ -151,7 +165,9 @@ __makeSpanTree g l
 
 -- | Compute a minimum spanning tree of a graph (Kruskal's algorithm)
 spanTree :: Graph a -> Graph a
-spanTree g = let es = edges g
+spanTree g = let{ es  = edges g
+                ; es' = filter (\e -> not . isSelfLoop $ e) es
+              }
   in foldl __makeSpanTree (newGraph $ nodes g) es
 
 
