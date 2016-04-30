@@ -17,6 +17,13 @@ graph1 =
   in G.newGraph ns
 
 -- Simple graph with some bidirectional links
+--
+--  moscow─────────────────────────┐      tokyo
+--       ╲            beijing        ╲     /
+--         ╲           │    ╲_________osaka
+--           ╲        ╱                /
+--             bangkok────────────────┘
+--
 graph2 :: G.Graph [Char]
 graph2 = 
   let links = [ ("beijing","osaka",3)
