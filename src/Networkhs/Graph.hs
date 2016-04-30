@@ -164,11 +164,14 @@ __makeSpanTree g l
     where g' = addLink g l
 
 -- | Compute a minimum spanning tree of a graph (Kruskal's algorithm)
+-- RESTRICTED: works only with digraph
 spanTree :: Graph a -> Graph a
-spanTree g = let{ es  = edges g
-                ; es' = filter (\e -> not . isSelfLoop $ e) es
-              }
-  in foldl __makeSpanTree (newGraph $ nodes g) es
+spanTree g 
+  | isUndirected g = let{ es  = edges g
+                        ; es' = filter (\e -> not . isSelfLoop $ e) es
+                      }
+                  in foldl __makeSpanTree (newGraph $ nodes g) es
+  | otherwise = error "Spanning tree won't work with directed graph"
 
 
 
