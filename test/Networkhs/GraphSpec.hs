@@ -79,6 +79,22 @@ spec = do
       }
         in [l1,l2] `shouldBe` [(Just 1.1,Nothing),(Just 2.2, Just 2.2)]
 
+    it "shoult list all edges" $ do
+      let { edg  = G.edges graph2
+          ; edg0 = [ ("beijing","osaka",3.0)
+                   , ("osaka","beijing",3.0)
+                   , ("bangkok","beijing",8.0)
+                   , ("beijing","bangkok",8.0)
+                   , ("moscow","osaka",10.0)
+                   , ("osaka","moscow",10.0)
+                   , ("bangkok","osaka",12.0)
+                   , ("osaka","bangkok",12.0)
+                   , ("bangkok","moscow",15.0)
+                   , ("moscow","bangkok",15.0)
+                   ]
+          }
+        in edg `shouldBe` edg0
+
   describe "Fundamental route structure tests" $ do
     it "should create a new route" $ do
       case G.newRoute ["a","b","c","d"] of
