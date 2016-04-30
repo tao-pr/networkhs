@@ -8,6 +8,14 @@ Graph analysis tool in purely functional taste.
 
 ---
 
+## Features
+
+[x] Graph data structure
+[x] Supports directed and undirected graph
+[x] Calculates traversal distance
+
+---
+
 ## Building
 
 The project required the following dependencies.
