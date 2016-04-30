@@ -138,9 +138,21 @@ edges g = let { lnks  = linksFrom g
   }
   in sortBy __orderLink lls
 
--- | Compute a minimum spanning tree of a graph
+-- | Check whether a graph is cyclic
+isCyclic :: Graph a -> Bool
+isCyclic g = error "TAOTODO: Implement this"
+
+-- | Accumulate a spanning tree with an edge (part of spanTree function)
+__makeSpanTree :: Graph g -> (String,String,Double) -> Graph g
+__makeSpanTree g l
+  | isCyclic g' = g
+  | otherwise = g'
+    where g' = addLink g l
+
+-- | Compute a minimum spanning tree of a graph (Kruskal's algorithm)
 spanTree :: Graph a -> Graph a
-spanTree g = error "TAOTODO: Implement this"
+spanTree g = let es = edges g
+  in foldl __makeSpanTree (newGraph $ nodes g) es
 
 
 
