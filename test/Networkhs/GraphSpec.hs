@@ -79,7 +79,15 @@ spec = do
       }
         in [l1,l2] `shouldBe` [(Just 1.1,Nothing),(Just 2.2, Just 2.2)]
 
-    it "shoult list all edges" $ do
+    it "should verify a digraph" $ do
+      G.isUndirected graph2 `shouldBe` True
+
+    it "should verify an undirected graph" $ do
+      let g' = G.addLink graph2 ("Tokyo","Beijing",3.5)
+        in G.isUndirected g' `shouldBe` False
+
+
+    it "should list all edges" $ do
       let { edg  = G.edges graph2
           ; edg0 = [ ("beijing","osaka",3.0)
                    , ("osaka","beijing",3.0)
@@ -104,7 +112,6 @@ spec = do
     it "should compute distance of a single hop" $ do
       let r = G.Route [("beijing","osaka")]
         in G.routeDistance r graph2 `shouldBe` Just 3
-
 
     it "should compute total distance" $ do
       let r = G.Route [("beijing","osaka"),("osaka","bangkok"),("bangkok","moscow")]
