@@ -33,6 +33,33 @@ graph2 =
               , ("osaka","bangkok",12) ]
   in foldl (G.addBiLink) graph1 links
 
+cyclicGraph1 :: G.Graph [Char]
+cyclicGraph1  = 
+  let { ns    = ["A","B","C","D"]
+      ; ns'   = map (\n -> G.Node n "city") ns
+      ; g     = G.newGraph ns'
+      ; links = [ ("A","B",1)
+                , ("B","C",1)
+                , ("C","A",2)
+                , ("C","B",1)
+                ]
+      }
+  in foldl (G.addLink) g links
+
+acyclicGraph1 :: G.Graph [Char]
+acyclicGraph1  = 
+  let { ns    = ["A","B","C","D"]
+      ; ns'   = map (\n -> G.Node n "city") ns
+      ; g     = G.newGraph ns'
+      ; links = [ ("A","B",1)
+                , ("B","C",1)
+                , ("B","D",2)
+                , ("A","D",1)
+                ]
+      }
+  in foldl (G.addLink) g links
+
+
 spec :: Spec
 spec = do
   describe "Fundamental Graph structure tests" $ do
@@ -86,7 +113,6 @@ spec = do
       let g' = G.addLink graph2 ("Tokyo","Beijing",3.5)
         in G.isUndirected g' `shouldBe` False
 
-
     it "should list all edges" $ do
       let { edg  = G.edges graph2
           ; edg0 = [ ("beijing","osaka",3.0)
@@ -124,3 +150,12 @@ spec = do
     it "should fail to compute distance of unconnected route" $ do
       let r = G.newRoute ["beijing","osaka","bangkok","moscow","beijing"]
         in G.routeDistance r graph2 `shouldSatisfy` null
+
+  describe "Advanced graph tests" $ do
+    it "should detect a cycle in a graph" $ do
+      G.isCyclic cyclicGraph1 `shouldBe` True
+
+    it "should detect acyclic graph" $ do
+      G.isCyclic acyclicGraph1 `shouldBe` False
+
+    --it "should find MST of undirected graph" $ do

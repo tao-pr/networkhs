@@ -10,7 +10,7 @@ Graph analysis tool in purely functional taste.
 
 ## Features
 
-[x] Graph data structure
+[x] Graph data structure with adjacency list
 [x] Supports directed and undirected graph
 [x] Calculates traversal distance
 

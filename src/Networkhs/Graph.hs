@@ -149,6 +149,7 @@ isUndirected g = let lnks = edges g
   in all (__isBiLink g) lnks
 
 -- | Check whether a graph is cyclic
+-- Assumming the graph is undirected*
 isCyclic :: Graph a -> Bool
 isCyclic g = error "TAOTODO: Implement this"
 
@@ -159,7 +160,7 @@ isSelfLoop (n0,n1,w) = n0 == n1
 -- | Accumulate a spanning tree with an edge (part of spanTree function)
 __makeSpanTree :: Graph g -> (String,String,Double) -> Graph g
 __makeSpanTree g l
-  | isCyclic g' = g
+  | isCyclic g' = g -- If a new link introduces a cycle, ignore it
   | otherwise = g'
     where g' = addLink g l
 
