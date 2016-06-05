@@ -3,8 +3,9 @@ module Networkhs.Graph where
 import Prelude
 import Data.Maybe
 import Data.String
-import Data.List(sortBy)
-import Data.Map as M hiding (map,foldl,filter)
+import Data.List(sortBy,any)
+import Data.Set hiding (map,foldl,filter,null)
+import Data.Map as M hiding (map,foldl,filter,null)
 
 data Node a = Node
   { key      :: String
@@ -138,7 +139,7 @@ edges g = let { lnks  = linksFrom g
   }
   in sortBy __orderLink lls
 
--- | Verify if a link is bidirectional (has its mirror)
+-- | Verify if a link is bidirectional (has its mirrored self)
 __isBiLink :: Graph a -> (String,String,Double) -> Bool
 __isBiLink g (n0,n1,w) = let (w1,w2) = linkBackAndForth n0 n1 g
   in w1 == w2
@@ -151,7 +152,33 @@ isUndirected g = let lnks = edges g
 -- | Check whether a graph is cyclic
 -- Assumming the graph is undirected*
 isCyclic :: Graph a -> Bool
-isCyclic g = error "TAOTODO: Implement this"
+isCyclic g = let  { ns  = nodes g
+                  ; ns' = map key ns
+  }
+  in any (\n -> isCyclicFrom g n []) ns'
+
+-- | Check whether we can traverse from the specified node 
+-- in the underlying graph and eventually end up itself?
+isCyclicFrom :: Graph a -> String -> [String] -> Bool
+isCyclicFrom g n prevs = case M.lookup n (linksTo g) of
+  -- No further links, definitely no cyclic route
+  Nothing -> False
+  Just lnks -> let lnks' = map fst lnks
+    in case (length prevs) < 2 of
+      -- Too short traversal path to examine?, go further
+      True -> any (\n' -> isCyclicFrom g n' (n:prevs)) lnks'
+      -- Account for forward paths only
+      -- (ignore path which reverts to the previously visited node)
+      False -> let  { n0      = last lnks'
+                    ; skip    = head lnks'
+                    ; lnks''  = filter (/= skip) lnks'
+        }
+        -- Is there any cyclic link?
+        in case any (==n0) lnks'' of
+          True -> True
+          -- If not, traverse deeper
+          False -> any (\m -> isCyclicFrom g m (n:prevs)) lnks''
+
 
 -- | Check whether a link is a self loop
 isSelfLoop :: (String,String,Double) -> Bool
