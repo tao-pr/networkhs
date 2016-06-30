@@ -47,7 +47,7 @@ cyclicGraph1  =
   in foldl (G.addLink) g links
 
 acyclicGraph1 :: G.Graph [Char]
-acyclicGraph1  = 
+acyclicGraph1 = 
   let { ns    = ["A","B","C","D"]
       ; ns'   = map (\n -> G.Node n "city") ns
       ; g     = G.newGraph ns'
@@ -59,6 +59,27 @@ acyclicGraph1  =
       }
   in foldl (G.addLink) g links
 
+hexagon :: G.Graph [Char]
+hexagon       = 
+  let { ns    = ["A","B","C","D","E","F"]
+      ; ns'   = map (\n -> G.Node n "city") ns
+      ; g     = G.newGraph ns'
+      ; links = [ ("A","B",1) -- Outer edge
+                , ("B","C",1) -- Outer edge
+                , ("C","D",1) -- Outer edge
+                , ("D","E",1) -- Outer edge
+                , ("E","F",1) -- Outer edge
+                , ("A","C",1)
+                , ("A","F",1)
+                , ("B","C",1)
+                , ("B","D",1)
+                , ("B","F",1)
+                , ("B","E",1)
+                , ("C","E",1)
+                , ("D","F",1)
+                ]
+      }
+    in foldl (G.addBiLink) g links
 
 spec :: Spec
 spec = do
@@ -157,5 +178,13 @@ spec = do
 
     it "should detect acyclic graph" $ do
       G.isCyclic acyclicGraph1 `shouldBe` False
+
+  describe "Minimum Spanning Tree tests" $ do
+    it "should generate a MST of a simple graph" $ do
+      let { sptree = G.spanTree hexagon 
+          ; ns     = G.nodes sptree 
+          ; ns'    = map G.key ns
+          }
+        in ns' `shouldBe` ["A","B","C","D","E","F"]
 
     --it "should find MST of undirected graph" $ do
