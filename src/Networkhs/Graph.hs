@@ -86,6 +86,11 @@ linkBackAndForth n0 n1 g = (link n0 n1 g, link n1 n0 g)
 __orderLink :: (String,String,Double) -> (String,String,Double) -> Ordering
 __orderLink (_,_,w1) (_,_,w2) = compare w1 w2
 
+
+-- | Determine if a graph contains the given link
+hasLink :: String -> String -> Graph a -> Bool
+hasLink n0 n1 g = not $ null $ link n0 n1 g
+
 -- | Create a node route from given path
 -- a path could be a list of node names in sequence
 newRoute :: [String] -> Route

@@ -180,11 +180,23 @@ spec = do
       G.isCyclic acyclicGraph1 `shouldBe` False
 
   describe "Minimum Spanning Tree tests" $ do
-    it "should generate a MST of a simple graph" $ do
+    it "should generate a non-self-looped MST" $ do
+      let sptree = G.spanTree hexagon
+        in G.isCyclic sptree `shouldBe` False
+        
+    it "should generate an MST which contains all nodes" $ do
       let { sptree = G.spanTree hexagon 
           ; ns     = G.nodes sptree 
           ; ns'    = map G.key ns
           }
         in ns' `shouldBe` ["A","B","C","D","E","F"]
 
-    --it "should find MST of undirected graph" $ do
+    it "should generate an MST which contains all minimal edges" $ do
+      let { sptree = G.spanTree hexagon
+          ; eds    =  [ ("A","B") -- Make sure our spanning tree
+                      , ("B","C") -- has all these edges.
+                      , ("C","D")
+                      ]
+          }
+        in all (\(n0, n1) -> G.hasLink n0 n1 sptree ) eds `shouldBe` True
+

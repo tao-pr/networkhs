@@ -13,6 +13,7 @@ Graph analysis tool in purely functional taste.
 [x] Graph data structure with adjacency list
 [x] Supports directed and undirected graph
 [x] Calculates traversal distance
+[x] Builds a minimum spanning tree of a graph
 
 ---
 
