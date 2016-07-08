@@ -180,10 +180,10 @@ spec = do
       G.isCyclic acyclicGraph1 `shouldBe` False
 
   describe "Minimum Spanning Tree tests" $ do
-    it "should generate a non-self-looped MST" $ do
+    it "should generate a non-self-looping MST" $ do
       let sptree = G.spanTree hexagon
         in G.isCyclic sptree `shouldBe` False
-        
+
     it "should generate an MST which contains all nodes" $ do
       let { sptree = G.spanTree hexagon 
           ; ns     = G.nodes sptree 

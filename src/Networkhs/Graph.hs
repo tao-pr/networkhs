@@ -197,7 +197,7 @@ __makeSpanTree g l
     where g' = addLink g l
 
 -- | Compute a minimum spanning tree of a graph (Kruskal's algorithm)
--- RESTRICTED: works only with digraph
+-- RESTRICTED: works only with undirected graph
 spanTree :: Graph a -> Graph a
 spanTree g 
   | isUndirected g = let{ es  = edges g
