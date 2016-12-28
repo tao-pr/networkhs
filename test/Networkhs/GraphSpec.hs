@@ -8,6 +8,10 @@ import qualified Networkhs.Graph as G
 main :: IO ()
 main = hspec spec
 
+graphSole :: G.Graph [Char]
+graphSole = G.newGraph ns
+  where ns = [(G.Node "bangkok") "city"]
+
 -- Simple graph without any links
 graph1 :: G.Graph [Char]
 graph1 = 
@@ -199,4 +203,10 @@ spec = do
                       ]
           }
         in all (\(n0, n1) -> G.hasLink n0 n1 sptree ) eds `shouldBe` True
+
+    it "should generate MST of single-noded tree" $ do
+      let { sptree = G.spanTree graphSole
+          ; ns     = map G.key $ G.nodes sptree
+          }
+        in ns `shouldBe` ["bangkok"]
 
